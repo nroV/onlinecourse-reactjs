@@ -1,36 +1,66 @@
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCourseContext } from "../../context/CourseProvider";
 
-import React from 'react'
-import { Link } from 'react-router-dom'
+export default function CourseCard({ course }) {
+  const { title, id, img, summaries, chapters } = course;
+  const navigate = useNavigate()
 
-export default function CourseCard() {
+  const { initstate,dispatch } = useCourseContext();
+
+  function deletecourse(id) {
+    console.log(id);
+    const newcourse = initstate.filter((course) => course.id !== id);
+
+  
+    // filterr a new list of course that doesnt contain the id that user press
+
+    if( ! window.confirm("Do you want to delete this course?")) {
+   // ask user to comfirm there deletion if not cancel it by using return keyword
+      return 
+    }
+    dispatch({
+      //call dispatch to send our action delete and new payload to trigger reducer to update new
+      //course state 
+      type:"course/delete",
+      payload:newcourse
+    })
+  }
+
+  function editcourse(id) {
+    navigate(`course/edit/${course.id}`)
+  }
   return (
+    <main className="flex my-5 p-7 rounded-md bg-slate-200  gap-11">
+      <div className="img mr-8">
+        <img src={img} alt={title} className="w-[130px] h-full object-cover" />
+      </div>
 
-    <Link  className='flex my-5 p-7 rounded-md bg-slate-200' to={'course/1'} >
+      <div className="course flex-1">
+        <Link to={`course/${course.id}`}>
+          <h3 className="font-semibold text-xl hover:underline">{title} </h3>
+        </Link>
 
+        <p className="text-slate-600 my-2 text-sm">📅 Dec 8 ,2023</p>
+        <p className="text-sm text-slate-800">{summaries}</p>
+      </div>
 
-    <div className="img mr-8">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg"
-       alt="img" className='w-[100%] h-24'
-       />
-    </div>
-
-    <div className="course">
-        <h3 className='font-semibold text-lg'>Next.Js 14 & React – The Complete Guide</h3>
-         <p className='text-slate-600 my-2 text-sm'>📅 Dec 8 ,2023</p>
-        <p className='text-sm text-slate-800'>Learn NextJS 14 from the ground up and build fullstack ReactJS + NextJS apps with the App Router or Pages Router! What you'll learn Learn how to build fullstack React apps with NextJS 14 & the App Router…</p>
-    </div>
-
-    <div className="modify">
-
-   
-        <button className='px-4 w-full py-2 mb-2 bg-[#2B3467] text-blue-100 rounded-lg'>
+      <div className="modify">
+        <button className="px-1 w-full py-2 mb-2 bg-[#2B3467] text-blue-100 rounded-lg"
+             onClick={editcourse}
+        >
           Edit
         </button>
-        <button className='px-4 w-full py-2 bg-[#EB455F] text-blue-100 rounded-lg'>
+        <button
+          onClick={() => deletecourse(course.id)}
+          className="px-1 w-full py-2 bg-[#EB455F] text-blue-100 rounded-lg"
+        >
           Delete
         </button>
-    </div> 
-</Link>
-  )
+      </div>
+    </main>
+  );
 }
- {/* improvement make it reuseable button or change popup ui button */}
+{
+  /* improvement make it reuseable button or change popup ui button */
+}

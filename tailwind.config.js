@@ -5,6 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    fontFamily:{
+      sans:'Roboto Mono, monospace'
+    },
     extend: {
       backgroundColor: {
         'body': 'white', // Set your desired background color

@@ -1,12 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { MdAdd } from "react-icons/md";
+import { useCourseContext } from '../../context/CourseProvider';
 
 export default function HeaderCourse() {
+  const {length} = useCourseContext()
   return (
 
     <header className="flex justify-between items-center mb-5">
-    <h3 className="text-xl font-medium ">📂 5 Total Courses</h3>
+    <h3 className="text-xl font-medium ">📂 {length} Total Courses</h3>
 
 
     <Link className=
