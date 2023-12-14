@@ -12,39 +12,60 @@ export default function CourseDetail() {
 
   const { setCourse, initstate, singlecourse } = useCourseContext();
 
+  console.log(initstate);
+  console.log(initstate.chapters);
+  const { title, id: cid, img, summaries, chapters } = singlecourse;
+  console.log(singlecourse);
+
+  const chapterlength = singlecourse.chapters;
+  const lesson = chapters?.lessons;
+
   useEffect(() => {
+    console.log(id);
+    console.log('use effect run');9
     const courses = initstate.slice();
+
+    console.log(courses);
     //make a copy from all the course because we dont want to mutate
 
-    const singlecourse = courses.filter((course) => course.id === Number(id));
+    const [single] = courses.filter((course) => Number(course.id) === Number(id));
+
+    console.log(single);
 
 
     //with the help of use param we can get the value of param and filter any id that match
 
     //then we call our global setcourse function to update state with  our new single course with spread operator
 
-    const chapters = singlecourse[0].chapters;
+    const chapters = single?.chapters;
+    console.log(chapters)
 
 
     for (const chapter of chapters) {
       lessonlen += chapter.lessons.length;
     }
+    console.log(single);
 
+    console.log("Update single course ")
     setCourse((pre) => {
-      return singlecourse[0];
+      return single;
     });
 
-    //clean up when we stop or leave navigate
+    // clean up when we stop or leave navigate
     return () => {
       lessonlen = 0;
       setCourse([]);
     };
-  }, [id]);
+  }, [initstate]);
 
-  const { title, id: cid, img, summaries, chapters } = singlecourse;
-  const chapterlength = singlecourse.chapters;
-  const lesson = chapters?.lessons;
 
+
+  if(!singlecourse) {
+    return <>
+    
+      loading ....
+    </>
+  }
   return (
     <main className="col-span-3 w-full">
       <input type="hidden" name="" value={cid} />

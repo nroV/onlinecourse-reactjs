@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CourseCard from "../components/course/Coursecard";
 import Navi from "../components/menu/Navi";
 import { Link } from "react-router-dom";
@@ -7,7 +7,11 @@ import HeaderCourse from "../components/course/HeaderCourse";
 import { useCourseContext } from "../context/CourseProvider";
 
 export default function Home() {
+
   const { initstate } = useCourseContext();
+
+
+
 
   return (
     <>
@@ -20,7 +24,7 @@ export default function Home() {
 
         {/* Rendering Course list Card component here  */}
 
-        {initstate.sort((x,y)=>y.id -x.id).map((courses) => {
+        {initstate.sort((x,y)=> Number(x.id)-Number(y.id)).map((courses) => {
           return <CourseCard key={courses} course = {courses} />;
         })} 
       </section>
