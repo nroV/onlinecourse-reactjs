@@ -5,11 +5,12 @@ import { IoArrowBack } from "react-icons/io5";
 import { FaCircleXmark } from "react-icons/fa6";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
-import ProgressBar from "../../components/course/ProgressBar";
 import { useCourseContext } from "../../context/CourseProvider";
 import { ChapterPreview } from "../../components/course/ChapterPreview";
 import { CreateandEditForm } from "../../components/course/CreateandEditForm";
 export default function CreateCourse() {
+  //create custom hook here instead using like this
+
   const [showcourse, setshowcourse] = useState(true);
   const [showchapter, setchapter] = useState(false);
   const [showlesson, setLesson] = useState(false);
@@ -21,13 +22,18 @@ export default function CreateCourse() {
   const [issave, setSave] = useState(true);
   const [lessons, setnewLesson] = useState({});
   const [temchapter, setnewchapter] = useState([]);
+  const [chapterid, setEditChapterId] = useState();
+  const [imgurl, setImageUrl] = useState(
+    "https://montevista.greatheartsamerica.org/wp-content/uploads/sites/2/2016/11/default-placeholder.png"
+  );
+
   const navigate = useNavigate();
   const { id } = useParams();
 
   let payload = {
-    id: Date.now(),
+    id: id || Math.random(),
     title: title,
-    img: "https://miro.medium.com/v2/resize:fit:705/0*bEonUGnx4V0nL1eJ.jpg",
+    img: imgurl,
     summaries: summary,
     chapters: temchapter,
     // chapters:[
@@ -39,20 +45,54 @@ export default function CreateCourse() {
     // ]
   };
 
-  console.log(payload);
-  const { dispatch, singlecourse, initstate } = useCourseContext();
+  const { dispatch, singlecourse, initstate, setCourse } = useCourseContext();
+
+  function editandaddlesson(id) {
+    setLesson((pre) => !pre);
+    setTemlesson((prev) => [...prev, lessons]);
+  }
+  console.log(temlesson);
+
+  console.log(lessons);
+
+  function updatechandlesson(id) {
+    console.log(id);
+
+    setnewchapter((pre) => {
+      console.log(pre);
+
+      //find the pre state taht match the id
+
+      const editchapter = pre.filter((chapter) => {
+        if (chapter.id === id) {
+          chapter.name = chtitle;
+          chapter.lesson = temlesson;
+        }
+        return chapter.id !== null;
+      });
+      console.log(editchapter);
+
+      return [...editchapter];
+    });
+  }
 
   function saveandclose(isedit = false) {
     console.log("Update state");
-    console.log(temlesson);
-    console.log(payload);
-
+    const singlecourse = getsinglecourse(initstate.slice());
+    console.log(singlecourse);
     //trigger the current inputting new chapter to save
 
-    if(isedit === true ) {
-      navigate("/");
-      return 
+    if (isedit === true) {
+      // trigger update current course state
+
+      //find the editing course id first
+
+      setSave((pre) => !pre);
+
+      // setSave((pre) => !pre);
+      return;
     }
+
     // trigger add new course state
     setnewchapter((pre) => {
       return [
@@ -65,6 +105,57 @@ export default function CreateCourse() {
       ];
     });
     setSave((pre) => !pre);
+  }
+
+  function deletelesson(id) {
+    //first update my preview tempory lesson
+    setTemlesson(temlesson.filter((lesson) => lesson.id !== id));
+
+    const tem = temchapter
+      .map((chapter) => chapter)
+      .filter((lesson) => lesson.id !== id);
+    console.log(tem);
+    // const updatedlesson =temchapter.filter((chapter)=>Number(chapter.id) !== Number(chapterid) )
+
+    console.log(tem.length);
+    console.log(tem);
+    console.log(temchapter);
+
+    //then i have to update my temchapter aaccording to the new or latest lesson or mutate the state here
+    const newstate = temchapter.slice().map((element, index) => {
+      if (element.id === chapterid) {
+        console.log("true");
+        element.lessons = temlesson.filter((lesson) => lesson.id !== id);
+      }
+
+      return element;
+    });
+
+    console.log(newstate.length);
+
+    //first update my preview tempory lesson
+    // setnewchapter(pre=>{
+
+    //   return [
+    //     ...pre,
+
+    //   ]
+
+    //   ;
+    //   console.log(state);
+    //   return [...state]
+    // })
+  }
+
+  function onChangeImage(e) {
+    console.log("on change image");
+
+    const file = e.target.files[0];
+    const objectUrl = URL.createObjectURL(file);
+
+    console.log(objectUrl);
+    setImageUrl(objectUrl);
+    console.log(e.target.files[0]);
   }
 
   function addnewchapter() {
@@ -84,38 +175,67 @@ export default function CreateCourse() {
     setchtitle("");
     setTemlesson([]);
   }
+
   function getsinglecourse(initstate) {
     const courses = initstate.slice();
-    const singlecourse = courses.filter((course) => course.id === Number(id));
+    console.log(id);
+    const singlecourse = courses.filter(
+      (course) => Number(course.id) === Number(id)
+    );
     return singlecourse;
   }
 
-  console.log(temlesson);
-  function clickonchapter(id) {
-    const courses = initstate.slice();
+  function clickonchapter(id, chapters) {
     console.log(id);
-    const [chapters] = courses.map((course) => course.chapters);
+
     console.log(chapters);
 
     const [singlechapter] = chapters.filter((chapter) => chapter.id === id);
-
-    setchtitle(singlechapter.name);
-
+    console.log(singlechapter);
+    setchtitle(singlechapter?.name);
     setTemlesson((pre) => {
       return singlechapter?.lessons;
     });
-
-    // return singlecourse[0]
   }
   useEffect(() => {
     if (payload.title === null || payload.title === "") {
       return;
     }
-    dispatch({
-      type: "course/create",
-      payload: payload,
-    });
-    navigate("/");
+
+    if (id !== null || id !== undefined) {
+      console.log("Update");
+      const newstate = initstate.slice();
+      console.log(newstate.length);
+      console.log(id);
+
+      const updatedstate = newstate.filter(
+        (item) => Number(item.id) !== Number(id)
+      );
+
+      console.log(updatedstate);
+
+      console.log(payload.chapters);
+
+      console.log(payload);
+      const combine = [...updatedstate, payload];
+      console.log(combine);
+
+      dispatch({
+        type: "course/edit",
+        payload: combine,
+      });
+
+      navigate(-1);
+    } else {
+      dispatch({
+        type: "course/create",
+        payload: payload,
+      });
+      navigate("/");
+    }
+    return () => {
+      setCourse([]);
+    };
   }, [issave]);
 
   useEffect(() => {
@@ -123,6 +243,8 @@ export default function CreateCourse() {
       setTitle(singlecourse.title.trim());
       setSumary(singlecourse.summaries.trim());
       setnewchapter(singlecourse.chapters);
+      console.log(singlecourse.chapters);
+      setImageUrl(singlecourse.img);
       // setchtitle("");
       // setTemlesson([]);
     }
@@ -133,9 +255,11 @@ export default function CreateCourse() {
     //make a copy from all the course because we dont want to mutate
 
     //maybe create function to return single course??
-    const singlecourse = getsinglecourse(initstate.slice());
+    const [singlecourse] = getsinglecourse(initstate.slice());
 
-    bindingdata(singlecourse[0]);
+    bindingdata(singlecourse);
+
+    //clean up when we navigate out
   }, []);
 
   return (
@@ -146,22 +270,30 @@ export default function CreateCourse() {
       </header>
 
       <section className="max-w-[900px] m-auto my-16">
-        <ProgressBar />
         {showcourse && (
           <CourseSection
             issave={issave}
             setshowcourse={setshowcourse}
+            onChangeImage={onChangeImage}
             setTitle={setTitle}
             chtitle={chtitle}
             setSumary={setSumary}
             setchapter={setchapter}
             summary={summary}
             title={title}
+            imgurl={imgurl}
+            setImageUrl={setImageUrl}
           />
         )}
 
         {showchapter && (
           <ChapterSection
+            editandaddlesson={editandaddlesson}
+            deletelesson={deletelesson}
+            chid={chapterid}
+            setnewchapter={setnewchapter}
+            setEditChapterId={setEditChapterId}
+            updatechandlesson={updatechandlesson}
             chtitle={chtitle}
             clickonchapter={clickonchapter}
             id={id}
@@ -186,6 +318,12 @@ export default function CreateCourse() {
 }
 
 function ChapterSection({
+  editandaddlesson,
+  deletelesson = { deletelesson },
+  chid,
+  setnewchapter,
+  setEditChapterId,
+  updatechandlesson,
   clickonchapter,
   setchapter,
   temchapter,
@@ -208,21 +346,25 @@ function ChapterSection({
 
   const [isedit, setEdit] = useState(false);
 
+  const [isAddnew,setAddNew] = useState(false);
+
+  const [currlesson,setidlesson] = useState(0)
+
   //create tempory lesson holder
 
-  function deletelesson(currindex) {
-    console.log(currindex);
-    const updatedlesson = temlesson.filter((lesson, index) => {
-      if (index !== currindex) {
-        return lesson;
-      }
-    });
+  function deletechapter(chapterid) {
+    console.log(chapterid);
+    console.log(chapterid);
+    console.log(temchapter);
+    const updatedlesson = temchapter.filter(
+      (chapter) => Number(chapter.id) !== Number(chapterid)
+    );
 
+    console.log(updatedlesson.length);
     console.log(updatedlesson);
 
-    setTemlesson((pre) => {
-      return [...updatedlesson];
-    });
+    setnewchapter(updatedlesson);
+    console.log("delete a chapter");
   }
 
   return (
@@ -241,18 +383,40 @@ function ChapterSection({
         </h3>
 
         <div className="modify flex gap-3">
-
-          
           <button
             // disabled={issave}
-            onClick={id !== undefined ? ()=>saveandclose(true) : saveandclose}
+            onClick={id !== undefined ? () => saveandclose(true) : saveandclose}
             className="bg-slate-200 px-3 py-1 text-md font-medium bg-[#2B3467] rounded-lg flex items-center"
           >
-            <span> {id !== undefined ? 'Update & Close' : 'Saved & Close'} </span>
+            <span>
+              {" "}
+              {id !== undefined ? "Update & Close" : "Saved & Close"}{" "}
+            </span>
           </button>
 
           <button
-            onClick={() => addnewchapter()}
+            onClick={() => {
+
+
+
+     
+
+
+              if (chtitle && isedit) {
+                addnewchapter();
+              }
+
+
+              console.log(isedit);
+              setEdit(pre=>!pre)
+              setchtitle("")
+              setTemlesson([])
+              setAddNew(true)
+
+        
+             
+          
+            }}
             className=" px-3 py-1 text-md font-medium bg-[#2B3467] rounded-lg flex items-center text-white"
           >
             <span> Add New</span>
@@ -264,14 +428,27 @@ function ChapterSection({
 
       {id && (
         <ChapterPreview
+          deletechapter={deletechapter}
           clickonchapter={clickonchapter}
           chapters={temchapter}
+          setEditChapterId={setEditChapterId}
           setEdit={setEdit}
+          setAddNew={setAddNew }
         />
       )}
 
       {(!id || isedit) && (
         <CreateandEditForm
+          id={id}
+          setAddNew={setAddNew}
+          isAddnew={isAddnew}
+          isedit={isedit}
+          EditandNew={editandaddlesson}
+          setnewchapter={setnewchapter}
+          addnewchapter={addnewchapter}
+          updatechandlesson={updatechandlesson}
+          chid={chid}
+          lessonid ={currlesson}
           setTemlesson={setTemlesson}
           chtitle={chtitle}
           showlesson={showlesson}
@@ -281,25 +458,41 @@ function ChapterSection({
           temlesson={temlesson}
           setLesson={setLesson}
           lessons={lessons}
+          setEdit={setEdit}
+          setletitle={setletitle}
         />
       )}
 
-      {/* display the lesson preview card  list here  */}
+      {/* display the lesson and chapter title input preview card  list here  */}
 
       {(!id || isedit) && (
         <div className="chapter my-4 rounded w-full">
           {temlesson?.map((lesson, index) => (
             <div className="card flex mb-6 w-full justify-between" key={lesson}>
               <div className="left flex items-center">
-                <p className="text-3xl">📑 </p>
-                <h4 className="text-xl font-semibold ml-6">{lesson.title}</h4>
+                <p className="text-3xl">📂 </p>
+                <h4 className="text-lg font-semibold ml-6">{lesson.title}</h4>
               </div>
-              <button
-                onClick={(e) => deletelesson(index)}
-                className="text-red-500"
-              >
-                Delete
-              </button>
+
+              <div className="btn-gp space-x-4">
+                <button
+                   onClick={() =>{
+                    setletitle(lesson.title)
+                    
+                    setLesson((pre) => !pre)
+                    setidlesson(lesson.id)
+                   }}
+                  className="text-blue-500"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={(e) => deletelesson(lesson.id)}
+                  className="text-red-500"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -309,6 +502,9 @@ function ChapterSection({
 }
 
 function CourseSection({
+  onChangeImage,
+  imgurl,
+  setImageUrl,
   setchapter,
   setshowcourse,
   setTitle,
@@ -340,14 +536,30 @@ function CourseSection({
             placeholder="Course title"
             value={title}
             className="w-full p-3 bg-slate-100 border focus:border-blue-500 text-lg mb-11"
-            onChange={(e) => setTitle(e.target.value.trim())}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <textarea
             placeholder="Summary Your Course"
             value={summary}
             className="w-full p-3 bg-slate-100 border focus:border-blue-500
-text-lg mb-11 h-36 resize-none" // Added resize-none to prevent resizing
+          text-lg mb-11 h-36 resize-none" // Added resize-none to prevent resizing
             onChange={(e) => setSumary(e.target.value.trim())}
+          />
+
+          <div className="detail mb-4">
+            <p className="text-lg font-bold mb-2">Image thumbnail</p>
+            <p className="text-sm">Provide your course image thumbnail 📸 </p>
+            <figure className="w-40 my-5 mb-6">
+              <img src={imgurl} alt="img-thumbnail" />
+            </figure>
+          </div>
+
+          <input
+            type="file"
+            name=""
+            id=""
+            accept="image/png, image/jpeg"
+            onChange={(e) => onChangeImage(e)}
           />
         </form>
 

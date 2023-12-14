@@ -165,6 +165,10 @@ function reducer(state,action) {
     case "course/detail":
     return
 
+    case  "course/edit":
+      console.log("Done dispatching");
+      return [...action.payload]
+
     case "course/create":
       //add new 
 
