@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCourseContext } from "../../context/CourseProvider";
+import { useCourseContext } from "../../Provider/CourseProvider";
 
 export default function CourseCard({ course }) {
   const { title, id, img, summaries, chapters } = course;
@@ -31,7 +31,10 @@ export default function CourseCard({ course }) {
     navigate(`course/edit/${course.id}`)
   }
   return (
-    <main className="flex my-5 p-7 rounded-md bg-slate-200  gap-11">
+    <main className="sm:flex my-5 p-7 rounded-md bg-slate-200 gap-11 
+    hover:bg-slate-300 ease-in-out duration-300
+    
+    ">
       <div className="img mr-8">
         <img src={img} alt={title} className="w-[130px] h-full object-cover" />
       </div>
@@ -45,15 +48,27 @@ export default function CourseCard({ course }) {
         <p className="text-sm text-slate-800">{summaries}</p>
       </div>
 
-      <div className="modify">
-        <button className="px-1 w-full py-2 mb-2 bg-[#2B3467] text-blue-100 rounded-lg"
+      <div className="modify sm:my-0 my-10 space-x-3 sm:space-x-0">  
+        <button className="
+        px-5
+        sm:px-1
+        sm:w-full
+        py-2 mb-2 bg-[#2B3467] text-blue-100 
+        text-[14.5px] sm:text-lg
+        rounded-lg hover:bg-[#000000] ease-in-out duration-300"
              onClick={editcourse}
         >
           Edit
         </button>
         <button
           onClick={() => deletecourse(course.id)}
-          className="px-1 w-full py-2 bg-[#EB455F] text-blue-100 rounded-lg"
+          className="px-1 
+          sm:w-full
+          px-5
+          sm:px-1
+          text-[14.5px] sm:text-lg
+          py-2 bg-[#EB455F] text-blue-100 rounded-lg 
+          hover:bg-[#ca253e] ease-in-out duration-300"
         >
           Delete
         </button>

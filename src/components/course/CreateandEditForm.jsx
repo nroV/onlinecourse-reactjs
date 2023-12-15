@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export function CreateandEditForm({
   EditandNew,
   setAddNew,
@@ -19,9 +21,56 @@ export function CreateandEditForm({
   lessons,
   setTemlesson,
   setnewchapter,
-  isedit
+  isedit,
 }) {
-  console.log(chid);
+  const [islessonempty, setlessonempty] = useState(true);
+
+  const onUpdateData = () => {
+    if (isedit == true && isAddnew == false) {
+      setAddNew(false);
+      console.log(temlesson);
+      console.log(temlesson.length);
+      setnewchapter((pre) => {
+        console.log(...pre);
+
+        const state = pre;
+
+        state.map((pre) => {
+          if (pre.id === chid) {
+            pre.lessons = temlesson;
+          }
+
+          return pre;
+        });
+
+        return [...state];
+      });
+      updatechandlesson(chid);
+    }
+
+    if (isedit == true && isAddnew == true) {
+      //state is true
+
+      addnewchapter();
+
+      //true => false
+
+      setAddNew((pre) => !pre);
+    }
+
+    setEdit((pre) => !pre);
+    setAddNew(false);
+    setletitle("");
+  };
+  useEffect(() => {
+    if (letitle !== "") {
+      setlessonempty(false);
+      return;
+    }
+    setlessonempty(true);
+  }, [letitle]);
+
+  console.log(islessonempty);
   return (
     <form className="my-7 mb-6">
       <div className="flex justify-between items-center mb-7 space-x-3">
@@ -34,53 +83,11 @@ export function CreateandEditForm({
         />
         {id && (
           <button
-            className="text-blue-500 border-2 border-b-3 p-3"
+            className="bg-[#2B3467] border-2 border-b-3 p-3 text-white border-0 rounded-md"
             type="button"
-            onClick={() => {
-              console.log(id);
-              console.log(isedit);
-              console.log(isAddnew);
-              if (isedit == true && isAddnew == false) {
-                //false
-
-                //i set to true 
-                setAddNew(false)
-                console.log(temlesson);
-                console.log(temlesson.length);
-                setnewchapter((pre) => {
-                  console.log(...pre);
-
-                  const state = pre;
-
-                  state.map((pre) => {
-                    if (pre.id === chid) {
-                      pre.lessons = temlesson;
-                    }
-
-                    return pre;
-                  });
-
-                  return [...state];
-                });
-                updatechandlesson(chid);
-              } 
-              
-              if(isedit == true && isAddnew == true) {
-                //state is true 
-       
-                addnewchapter();
-
-                //true => false 
-
-                
-                setAddNew(pre=>!pre)
-              }
-
-              setEdit((pre) => !pre);
-              setAddNew(false)
-            }}
+            onClick={onUpdateData}
           >
-            Update
+            Save
           </button>
         )}
       </div>
@@ -97,6 +104,8 @@ export function CreateandEditForm({
               type="text"
               value={letitle}
               onChange={(e) => {
+                console.log(letitle);
+
                 setletitle(e.target.value);
                 setnewLesson({
                   id: Date.now(),
@@ -109,16 +118,20 @@ export function CreateandEditForm({
               id=""
             />
             <button
-              className="text-[16px] text-[#bebebe] bg-[#2B3467] px-4 py-2 rounded-2xl font-normal"
-              type="button"
+              disabled={islessonempty}
+              className={`${
+                islessonempty && "bg-slate-500 hover:cursor-not-allowed"
+              } text-[16px] text-[#bebebe] bg-[#2B3467] px-4 py-2 rounded-2xl font-normal"
+              type="button"`}
               onClick={() => {
                 // setshowcourse((pre) => !pre)
                 // setchapter((pre) => !pre)
+                console.log(letitle);
 
                 setLesson((pre) => !pre);
                 setletitle("");
                 console.log(lessonid);
-                if (lessonid && isedit ) {
+                if (lessonid && isedit) {
                   //check if it an edit or add new if there is an id prop meaning is an edit
 
                   setTemlesson((prev) => {

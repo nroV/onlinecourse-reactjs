@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 import AccordingCard from "../../components/course/AccordingCard";
 import { useParams } from "react-router-dom";
-import { useCourseContext } from "../../context/CourseProvider";
+import { useCourseContext } from "../../Provider/CourseProvider";
 
 let lessonlen = 0;
 
@@ -12,20 +12,17 @@ export default function CourseDetail() {
 
   const { setCourse, initstate, singlecourse } = useCourseContext();
 
-  console.log(initstate);
-  console.log(initstate.chapters);
+
   const { title, id: cid, img, summaries, chapters } = singlecourse;
-  console.log(singlecourse);
 
   const chapterlength = singlecourse.chapters;
   const lesson = chapters?.lessons;
 
   useEffect(() => {
-    console.log(id);
-    console.log('use effect run');9
+
     const courses = initstate.slice();
 
-    console.log(courses);
+
     //make a copy from all the course because we dont want to mutate
 
     const [single] = courses.filter((course) => Number(course.id) === Number(id));
@@ -38,7 +35,6 @@ export default function CourseDetail() {
     //then we call our global setcourse function to update state with  our new single course with spread operator
 
     const chapters = single?.chapters;
-    console.log(chapters)
 
 
     for (const chapter of chapters) {
@@ -60,16 +56,12 @@ export default function CourseDetail() {
 
 
 
-  if(!singlecourse) {
-    return <>
-    
-      loading ....
-    </>
-  }
   return (
     <main className="col-span-3 w-full">
       <input type="hidden" name="" value={cid} />
-      <header className="bg-[#2B3467] w-full text-[#FCFFE7] px-11 py-8">
+      <header className="bg-[#2B3467] w-full text-[#FCFFE7] px-11 py-8 
+
+      ">
         <h1 className="text-4xl mb-6">{title}</h1>
         <p>{summaries}</p>
       </header>

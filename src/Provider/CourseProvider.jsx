@@ -165,6 +165,10 @@ function reducer(state,action) {
     case "course/detail":
     return
 
+    case "course/search":
+      console.log(action.payload);
+      return [...action.payload]
+
     case  "course/edit":
       console.log("Done dispatching");
       return [...action.payload]
@@ -192,21 +196,53 @@ function useCourseContext(){
   const context = useContext(Courseprovider)
   return context
 }
+
+
+
 function CourseProvider({children}) {
 
   const [allcourses,dispatch] = useReducer(reducer,course)
 
   const [singlecourse,setCourse] = useState([])
+  const [sort,setFilter] = useState(false)
 
+  const [query,setQuery] = useState("")
+
+  function SearchQuery (query) {
+
+
+    const copy =  course.slice()
+    //copy our main data because we will update state every time user search incase lose original data
+
+
+    const result = copy.filter((course)=>{
+
+
+      return course.title.toLowerCase().includes(query.toLowerCase());
+
+    })
+
+    //dispatch a neww payload search 
+    dispatch({
+      type:"course/search",
+      payload:result
+    })
+ 
+
+
+  }
 
   return<Courseprovider.Provider value={{ 
 
     initstate:allcourses,
     dispatch:dispatch,
+    query:query,
     isloading:false,
     length:course.length,
     setCourse:setCourse,
-    singlecourse,singlecourse
+    singlecourse,singlecourse,
+    SearchQuery:SearchQuery,
+    setQuery:setQuery
 
    }}>
         {children}
