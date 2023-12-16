@@ -42,7 +42,7 @@ export function CourseSection({
               value={summary}
               className="w-full p-3 bg-slate-100 border focus:border-blue-500
             text-lg mb-11 h-36 resize-none" // Added resize-none to prevent resizing
-              onChange={(e) => setSumary(e.target.value.trim())}
+              onChange={(e) => setSumary(e.target.value)}
             />
   
             <div className="detail mb-4">
