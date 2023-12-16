@@ -1,16 +1,8 @@
-//create a context
-
-import { createContext, useContext, useReducer, useState } from "react";
-import { FaZ } from "react-icons/fa6";
-
-const Courseprovider = createContext()
-
-const course = 
-  [
+export const course = [
     {
       id: 1,
       title: "Nodejs for Starter",
-      img:"https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg",
+      img: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg",
       summaries: "Perfect course for beginners who love JavaScript server-side",
       chapters: [
         {
@@ -48,7 +40,7 @@ const course =
     {
       id: 2,
       title: "PHP Fundamentals",
-      img:"https://www.freepnglogos.com/uploads/php-logo-png/php-logo-png-transparent-svg-vector-bie-supply-1.png",
+      img: "https://www.freepnglogos.com/uploads/php-logo-png/php-logo-png-transparent-svg-vector-bie-supply-1.png",
       summaries: "Perfect course for beginners who love JavaScript server-side",
       chapters: [
         {
@@ -85,7 +77,7 @@ const course =
     {
       id: 3,
       title: "Flutter Crash Course",
-      img:"https://web-strapi.mrmilu.com/uploads/flutter_logo_470e9f7491.png",
+      img: "https://web-strapi.mrmilu.com/uploads/flutter_logo_470e9f7491.png",
       summaries: "Learn Flutter for cross-platform mobile development",
       chapters: [
         {
@@ -122,7 +114,7 @@ const course =
     {
       id: 4,
       title: "JavaScript Mastery",
-      img:"https://static.vecteezy.com/system/resources/previews/027/127/463/original/javascript-logo-javascript-icon-transparent-free-png.png",
+      img: "https://static.vecteezy.com/system/resources/previews/027/127/463/original/javascript-logo-javascript-icon-transparent-free-png.png",
       summaries: "Master JavaScript for front-end and back-end development",
       chapters: [
         {
@@ -157,97 +149,4 @@ const course =
       ],
     },
     // Add more courses as needed
-  ]
-
-function reducer(state,action) {
-
-  switch(action.type) {
-    case "course/detail":
-    return
-
-    case "course/search":
-      console.log(action.payload);
-      return [...action.payload]
-
-    case  "course/edit":
-      console.log("Done dispatching");
-      return [...action.payload]
-
-    case "course/create":
-      //add new 
-
-      return [...state,action.payload]
-
-      case "course/delete":
-        //add new 
-
-
-  
-        return action.payload
-
-    default:
-      return state
-  }
-}
-
-
-function useCourseContext(){
-
-  const context = useContext(Courseprovider)
-  return context
-}
-
-
-
-function CourseProvider({children}) {
-
-  const [allcourses,dispatch] = useReducer(reducer,course)
-
-  const [singlecourse,setCourse] = useState([])
-  const [sort,setFilter] = useState(false)
-
-  const [query,setQuery] = useState("")
-
-  function SearchQuery (query) {
-
-
-    const copy =  course.slice()
-    //copy our main data because we will update state every time user search incase lose original data
-
-
-    const result = copy.filter((course)=>{
-
-
-      return course.title.toLowerCase().includes(query.toLowerCase());
-
-    })
-
-    //dispatch a neww payload search 
-    dispatch({
-      type:"course/search",
-      payload:result
-    })
- 
-
-
-  }
-
-  return<Courseprovider.Provider value={{ 
-
-    initstate:allcourses,
-    dispatch:dispatch,
-    query:query,
-    isloading:false,
-    length:course.length,
-    setCourse:setCourse,
-    singlecourse,singlecourse,
-    SearchQuery:SearchQuery,
-    setQuery:setQuery
-
-   }}>
-        {children}
-
-  </Courseprovider.Provider>;
-}
-
-export {CourseProvider,useCourseContext}
+  ];

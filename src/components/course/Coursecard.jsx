@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCourseContext } from "../../Provider/CourseProvider";
+import { useCourseContext } from "../../utils/CourseProvider";
+
 
 export default function CourseCard({ course }) {
   const { title, id, img, summaries, chapters } = course;
@@ -41,11 +42,11 @@ export default function CourseCard({ course }) {
 
       <div className="course flex-1">
         <Link to={`course/${course.id}`}>
-          <h3 className="font-semibold text-xl hover:underline">{title} </h3>
+          <h3 className="font-semibold text-xl hover:underline my-5 sm:my-0">{title} </h3>
         </Link>
 
-        <p className="text-slate-600 my-2 text-sm">📅 Dec 8 ,2023</p>
-        <p className="text-sm text-slate-800">{summaries}</p>
+        {/* <p className="text-slate-600 my-2 text-sm">📅 Dec 8 ,2023</p> */}
+        <p className="text-sm text-slate-800 my-3">{summaries}</p>
       </div>
 
       <div className="modify sm:my-0 my-10 space-x-3 sm:space-x-0">  

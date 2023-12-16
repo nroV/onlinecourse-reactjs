@@ -8,7 +8,7 @@ export default function AccordingCard({ chapter }) {
   return (
     <main
       className="border-[1px] border-solid border-[grey] mb-0"
-      // onClick={() => setAccording((pre) => !pre)}
+  
     >
       <div
         className={`according flex

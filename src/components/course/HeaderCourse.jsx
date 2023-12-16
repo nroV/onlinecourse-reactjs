@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MdAdd } from "react-icons/md";
-import { useCourseContext } from "../../Provider/CourseProvider";
+import { useCourseContext } from "../../utils/CourseProvider";
+
 
 export default function HeaderCourse() {
   const { length } = useCourseContext();

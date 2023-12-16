@@ -1,32 +1,21 @@
 
 import React, { useEffect, useState } from "react";
-import { GrLinkNext } from "react-icons/gr";
-import { IoArrowBack } from "react-icons/io5";
-
-import { FaCircleXmark } from "react-icons/fa6";
-
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useCourseContext } from "../../Provider/CourseProvider";
-import { ChapterPreview } from "../../components/course/ChapterPreview";
-import { CreateandEditForm } from "../../components/course/CreateandEditForm";
+// import { GrLinkNext } from "react-icons/gr";
 
 export function CourseSection({
     onChangeImage,
     imgurl,
-    setImageUrl,
     setchapter,
     setshowcourse,
     setTitle,
     setSumary,
     title,
     summary,
-    chtitle,
-    issave,
   }) {
     const [isdisable, setDisable] = useState(true);
   
     useEffect(() => {
-      console.log(imgurl);
+ 
       //use effect on title and summary if they are empty  disable the button
       if (title !== "" && summary !== "" && !imgurl.includes("https://montevista.greatheartsamerica.org/wp-content/uploads/sites/2/2016/11/default-placeholder.png")  ) {
         setDisable(false);
@@ -85,8 +74,10 @@ export function CourseSection({
             rounded-lg flex items-center text-white disabled:cursor-not-allowed`}
           >
             <span className="mx-4">Next</span>
+
+            
   
-            <GrLinkNext />
+            {/* <GrLinkNext /> */}
           </button>
         </div>
       </>

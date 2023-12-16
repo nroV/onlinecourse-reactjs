@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useCourseContext } from "../../Provider/CourseProvider";
+import { useCourseContext } from "../../utils/CourseProvider";
+
 
 export default function Asidebar({setOption}) {
 
@@ -65,8 +66,8 @@ export default function Asidebar({setOption}) {
           className="p-4 bg-white
         border-solid border-2 w-full"
         >
-          <option value="asc">Sort By course name ASC</option>
-          <option value="desc">Sort By course name DESC</option>
+          <option value="asc">Sort By Title desc</option>
+          <option value="desc">Sort By Title asc</option>
         </select>
       </div>
     </aside>

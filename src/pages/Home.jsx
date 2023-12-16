@@ -4,62 +4,77 @@ import Navi from "../components/ui/Navi";
 import { Link } from "react-router-dom";
 import Asidebar from "../components/course/Asidebar";
 import HeaderCourse from "../components/course/HeaderCourse";
-import { useCourseContext } from "../Provider/CourseProvider";
+
 import NoItem from "../components/ui/NoItem";
+import { useCourseContext } from "../utils/CourseProvider";
 
 export default function Home() {
+  const { initstate ,searchresult , query } = useCourseContext();
 
-  const { initstate } = useCourseContext();
-
-  console.log(initstate);
-
-  const [option,setOption] = useState('asc')
-
-  
+  const [option, setOption] = useState();
 
 
 
-  console.log(initstate);
+  const courses = query !== "" ? searchresult : initstate
+
+  //condition to check whether is in search mode we use the search state result 
+  //if not we use the initstate
+
+
+
   return (
     <>
       <Navi />
 
-      <section className="
+      <section
+        className="
       col-span-3
       md:order-last
       order-3
       sm:col-span-3
       lg:col-span-2
       md:col-span-3
-       p-4 sm:pl-6">
+       p-4 sm:pl-6"
+      >
         <HeaderCourse />
 
         <hr />
 
-
         {
-      initstate?.length === 0 && 
+        
+        courses?.length === 0 && (
+          <NoItem
+            header={"There are no available course right now 😢"}
+            text={
+              "Please try again later!!! our team will try our best to cope with it 🏬🔶"
+            }
+          />
+        )}
 
-      <NoItem
-       header={'There are no available course right now 😢'} 
-       text={'Please try again later!!! our team will try our best to cope with it 🏬🔶'} />
-      
- 
-        }
-
-        {/* Rendering Course list Card component here  */}
-
-        { initstate.sort((x,y)=> 
-        option === 'asc' ?
+        {/* { initstate.sort((x,y)=> 
+        option === 'desc' ?
         Number(y.id)-Number(x.id) : Number(x.id)-Number(y.id)  ).map((courses) => {
           return <CourseCard key={courses} course = {courses} />;
-        })} 
+        })}  */}
+
+        {!option &&
+          courses?.sort((x, y) => Number(x.id) - Number(y.id))
+            .map((course) => {
+              return <CourseCard key={course} course={course} />;
+            })}
+
+        {option &&
+          courses?.sort((x, y) =>
+              option === "desc"
+                ? x.title?.localeCompare(y.title)
+                : y.title?.localeCompare(x.title)
+            )
+            .map((course) => {
+              return <CourseCard key={courses} course={course} />;
+            })}
       </section>
 
-      <Asidebar  setOption ={setOption} />
-
-
-      
+      <Asidebar setOption={setOption} />
     </>
   );
 }
