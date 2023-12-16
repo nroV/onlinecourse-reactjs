@@ -16,54 +16,27 @@ function useCourseContext() {
 function CourseProvider({ children }) {
   const [allcourses, dispatch] = useReducer(Coursereducer, course);
 
-  const [searchresult,setSearch] = useState([])
+
 
   const [singlecourse, setCourse] = useState([]);
   const [sort, setFilter] = useState(false);
 
-  const [query, setQuery] = useState("");
+
 
 
 
   
 
-  function SearchQuery(query) {
-
-    
-
-
-
-
-    const copy = allcourses.slice();
-
-    console.log(copy);
-    //copy our main data because we will update state every time user search incase lose original data
-
-    const result = copy.filter((course) => {
-      return course.title.toLowerCase().includes(query.toLowerCase() || "");
-    });
-
-    //update or set state to our search result base on our title that we filter
-
-    setSearch(pre=>[...result])
-
-
-  }
 
   return (
     <Courseprovider.Provider
       value={{
         initstate: allcourses,
         dispatch: dispatch,
-        searchresult:searchresult,
-        query: query,
         isloading: false,
-        length: course.length,
+        length: allcourses.length,
         setCourse: setCourse,
-        singlecourse,
-        singlecourse,
-        SearchQuery: SearchQuery,
-        setQuery: setQuery,
+        singlecourse
       }}
     >
       {children}

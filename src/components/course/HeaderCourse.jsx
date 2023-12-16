@@ -6,6 +6,8 @@ import { useCourseContext } from "../../utils/CourseProvider";
 
 export default function HeaderCourse() {
   const { length } = useCourseContext();
+
+  console.log(length);
   return (
     <header className="sm:flex justify-between items-center mb-5 ">
       <h3 className="text-xl font-medium ">📂 {length} Total Courses</h3>

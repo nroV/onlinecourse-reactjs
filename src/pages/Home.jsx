@@ -9,16 +9,10 @@ import NoItem from "../components/ui/NoItem";
 import { useCourseContext } from "../utils/CourseProvider";
 
 export default function Home() {
-  const { initstate ,searchresult , query } = useCourseContext();
+  const { initstate   } = useCourseContext();
 
   const [option, setOption] = useState();
 
-
-
-  const courses = query !== "" ? searchresult : initstate
-
-  //condition to check whether is in search mode we use the search state result 
-  //if not we use the initstate
 
 
 
@@ -42,7 +36,7 @@ export default function Home() {
 
         {
         
-        courses?.length === 0 && (
+        initstate?.length === 0 && (
           <NoItem
             header={"There are no available course right now 😢"}
             text={
@@ -58,19 +52,22 @@ export default function Home() {
         })}  */}
 
         {!option &&
-          courses?.sort((x, y) => Number(x.id) - Number(y.id))
+          initstate?.sort((x, y) => Number(x.id) - Number(y.id))
+          
             .map((course) => {
-              return <CourseCard key={course} course={course} />;
+              return <CourseCard key={course.id} course={course} />;
             })}
 
         {option &&
-          courses?.sort((x, y) =>
+          initstate?.sort((x, y) =>
               option === "desc"
                 ? x.title?.localeCompare(y.title)
                 : y.title?.localeCompare(x.title)
             )
             .map((course) => {
-              return <CourseCard key={courses} course={course} />;
+              
+              console.log(course.id);
+              return <CourseCard key={course.id} course={course} />;
             })}
       </section>
 
