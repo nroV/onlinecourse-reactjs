@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
-export function CreateandEditForm({
+export const CreateandEditForm = memo( function CreateandEditForm({
   EditandNew,
+  setidlesson,
   setAddNew,
   lessonid,
   setletitle,
@@ -26,15 +27,25 @@ export function CreateandEditForm({
   const [islessonempty, setlessonempty] = useState(true);
 
   const onUpdateData = () => {
+
+    //check the current mode lesson if it in edit or create state
+    //isAddnew state meaning in add new chapter
+    //isEdit state  meaning in edit lesson mode
+
+    //condition to check if one is false meaning user click on add new chapter
+
     if (isedit == true && isAddnew == false) {
       setAddNew(false);
-      console.log(temlesson);
-      console.log(temlesson.length);
+
+
+      //call the setnewchapter function to update my temporary chapter state to the current or updated lesson state
       setnewchapter((pre) => {
-        console.log(...pre);
+
 
         const state = pre;
 
+        // map the array of our previous state to find the lesson id and update the 
+        //  lesson of the chapter  
         state.map((pre) => {
           if (pre.id === chid) {
             pre.lessons = temlesson;
@@ -43,14 +54,20 @@ export function CreateandEditForm({
           return pre;
         });
 
+        //return the updated state of new lessons and chapter  
         return [...state];
       });
+
+      //trigger the updatechapter and lesson function from our parent component and passed chapter id as argument
       updatechandlesson(chid);
     }
 
+
+    //condition to check if both are true meaning user click on edit 
     if (isedit == true && isAddnew == true) {
       //state is true
 
+      console.log('run here ');
       addnewchapter();
 
       //true => false
@@ -62,15 +79,22 @@ export function CreateandEditForm({
     setAddNew(false);
     setletitle("");
   };
+
+
   useEffect(() => {
+
+    //listen to any state change on lesson title for validation on null or empty data
     if (letitle !== "") {
+   //if it met this condition meaning the user has input data so we update the lessonempty state back to false 
       setlessonempty(false);
       return;
     }
+
+    //vice versa 
     setlessonempty(true);
   }, [letitle]);
 
-  console.log(islessonempty);
+
   return (
     <form className="my-7 mb-6">
       <div className="flex justify-between items-center mb-7 space-x-3">
@@ -104,9 +128,10 @@ export function CreateandEditForm({
               type="text"
               value={letitle}
               onChange={(e) => {
-                console.log(letitle);
+      
 
                 setletitle(e.target.value);
+                //explain set new lesson here  
                 setnewLesson({
                   id: Date.now(),
                   title: e.target.value,
@@ -124,16 +149,19 @@ export function CreateandEditForm({
               } text-[16px] text-[#bebebe] bg-[#2B3467] px-4 py-2 rounded-2xl font-normal"
               type="button"`}
               onClick={() => {
-                // setshowcourse((pre) => !pre)
-                // setchapter((pre) => !pre)
-                console.log(letitle);
+     
+     
 
                 setLesson((pre) => !pre);
                 setletitle("");
                 console.log(lessonid);
-                if (lessonid && isedit) {
-                  //check if it an edit or add new if there is an id prop meaning is an edit
 
+                console.log(lessonid);
+                console.log(isedit);
+                if (lessonid && isedit) {
+             //check if it an edit or add new if there is an lesson id prop meaning is an edit mode 
+
+                  console.log('true');
                   setTemlesson((prev) => {
                     prev.map((element) => {
                       if (element.id === lessonid) {
@@ -144,10 +172,13 @@ export function CreateandEditForm({
 
                     return [...prev];
                   });
+                  setidlesson(0)
                   return;
                 }
+                console.log('false');
 
                 setTemlesson((prev) => [...prev, lessons]);
+
               }}
             >
               Save Changes
@@ -166,4 +197,4 @@ export function CreateandEditForm({
       </div>
     </form>
   );
-}
+} )

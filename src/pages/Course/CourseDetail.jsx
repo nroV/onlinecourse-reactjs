@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 
 import AccordingCard from "../../components/course/AccordingCard";
 import { useParams } from "react-router-dom";
-import { useCourseContext } from "../../Provider/CourseProvider";
+import { useCourseContext } from "../../utils/CourseProvider";
+
 
 let lessonlen = 0;
 
